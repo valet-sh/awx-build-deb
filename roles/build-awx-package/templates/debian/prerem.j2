@@ -1,0 +1,9 @@
+#!/bin/bash
+
+/bin/systemctl stop awx-cbreceiver
+/bin/systemctl stop awx-dispatcher
+/bin/systemctl stop awx-channels-worker
+/bin/systemctl stop awx-daphne
+/bin/systemctl stop awx-web
+
+exit 0

@@ -1,0 +1,17 @@
+---
+
+- name: Clean package build path
+  file:
+    state: absent
+    path: "{{ build_package_dir }}"
+
+- name: ensure base package build directories exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{ build_package_dir }}"
+    - "{{ build_package_dir }}/DEBIAN"

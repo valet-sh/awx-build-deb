@@ -1,0 +1,9 @@
+---
+
+- name: "ensure cloudsmith-cli python package is installed"
+  pip:
+    name: cloudsmith-cli
+
+- name: "push package {{ package_filename }} to {{ repository }} for {{ os_identifier }}"
+  shell: "cloudsmith push deb {{ repository }}/{{ os_identifier }} {{ package_filename }}"
+  environment: "{{ env_vars }}"

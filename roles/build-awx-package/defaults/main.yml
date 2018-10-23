@@ -1,0 +1,40 @@
+---
+
+build_working_directory: "/tmp/awx-build"
+
+build_package_dir: "/tmp/awx-package"
+
+build_timestamp: "{{ ansible_date_time.epoch }}"
+
+build_dependencies:
+  - sudo
+  - git
+  - curl
+  - libxml2-dev
+  - libsasl2-dev
+  - python-dev
+  - libldap2-dev
+  - libssl-dev
+  - swig
+  - libxml2
+  - libxmlsec1-dev
+  - swig
+  - python-pip
+  - gettext
+  - rsync
+
+awx_user: "awx"
+awx_group: "awx"
+awx_home_path: "/var/lib/awx"
+awx_log_path: "/var/log/awx"
+
+awx_config_dir: "/etc/awx"
+awx_settings_file: "{{ awx_config_dir }}/settings.py"
+awx_secret_key_file: "{{ awx_config_dir }}/SECRET_KEY"
+awx_fallback_secret_key: "Aph4sojithaodiceingeingiduxiipae"
+
+awx_ui_path: "/usr/share/awx"
+
+deb_package_name: "awx_{{ awx_version }}_{{ build_timestamp }}_amd64.deb"
+
+upload_to_cloudsmith: true

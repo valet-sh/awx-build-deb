@@ -1,0 +1,16 @@
+---
+
+- name: provide DEBIAN control file
+  template:
+    src: "debian/{{ item }}.j2"
+    dest: "{{ build_package_dir }}/DEBIAN/{{ item }}"
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+  with_items:
+    - control
+    - conffiles
+    - preinst
+    - postinst
+    - prerem

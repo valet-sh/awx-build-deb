@@ -1,0 +1,15 @@
+---
+
+- name: include cloudsmith role to upload package
+  include_role:
+    name: cloudsmith-cli
+  vars:
+    package_filename: "/root/{{ deb_package_name }}"
+  when: (upload_to_cloudsmith is defined) and (upload_to_cloudsmith|bool)
+
+- name: fetch debian package to host (only if cloudsmith upload is disabled)
+  fetch:
+    src: "/root/{{ deb_package_name }}"
+    dest: "/tmp/{{ deb_package_name }}"
+    flat: yes
+  when: (upload_to_cloudsmith is not defined) or (not upload_to_cloudsmith|bool)

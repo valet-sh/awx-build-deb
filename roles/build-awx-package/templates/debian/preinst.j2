@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Stopping services..."
+systemctl is-active --quiet awx-cbreceiver && /bin/systemctl stop awx-cbreceiver
+systemctl is-active --quiet awx-dispatcher && /bin/systemctl stop awx-dispatcher
+systemctl is-active --quiet awx-channels-worker && /bin/systemctl stop awx-channels-worker
+systemctl is-active --quiet awx-daphne && /bin/systemctl stop awx-daphne
+systemctl is-active --quiet awx-web && /bin/systemctl stop awx-web
+
+exit 0

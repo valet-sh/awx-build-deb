@@ -1,0 +1,29 @@
+[Unit]
+Description=AWX web service
+After=syslog.target network.target
+
+[Service]
+Environment=AWX_SETTINGS_FILE={{ awx_settings_file }}
+
+ExecStart=/usr/local/bin/uwsgi \
+        --socket 127.0.0.1:8050 \
+        --module=awx.wsgi:application \
+        --logto=/var/log/awx/web.log \
+        --die-on-term \
+        --vacuum \
+        --uid {{ awx_user }} \
+        --gid {{ awx_group }} \
+        --processes=5 \
+        --harakiri=120 \
+        --no-orphans \
+        --master \
+        --max-requests=1000 \
+        --master-fifo={{ awx_home_path }}/awxfifo \
+        --lazy-apps -b 32768
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

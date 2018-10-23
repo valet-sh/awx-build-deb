@@ -1,0 +1,10 @@
+---
+
+- name: include build tasks
+  include_tasks: "build/main.yml"
+
+- name: include deb package assemply tasks
+  include_tasks: "assembly/main.yml"
+
+- name: include cloudsmith debian repository upload tasks
+  include_tasks: "publish/main.yml"

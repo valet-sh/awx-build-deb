@@ -1,0 +1,48 @@
+#!/bin/bash
+
+if [ ! -f {{ awx_secret_key_file }} ]; then
+    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 > {{ awx_secret_key_file }}
+fi
+
+/usr/bin/getent group {{ awx_group }} >/dev/null || /usr/sbin/groupadd --system {{ awx_group }}
+/usr/bin/getent passwd {{ awx_user }} >/dev/null || /usr/sbin/useradd --no-create-home --system -g {{ awx_group }} --home-dir {{ awx_home_path }} -s /sbin/nologin {{ awx_user }}
+
+chown -R {{ awx_user }}:{{ awx_group }} {{ awx_home_path }}
+
+if [ ! -d {{ awx_log_path }} ]; then
+    echo "creating log directory"
+    mkdir -p {{ awx_log_path }}
+    chown -R {{ awx_user }}:{{ awx_group }} {{ awx_log_path }}
+fi
+
+echo "Installing python requirements..."
+pip install -r /tmp/pip_requirements.txt
+
+echo "Installing ansible..."
+pip install ansible
+
+echo "Installing awx..."
+pip install --upgrade /tmp/awx-{{ awx_version }}.tar.gz
+
+/bin/systemctl daemon-reload
+
+echo "Enabling services..."
+/bin/systemctl enable awx-cbreceiver
+/bin/systemctl enable awx-dispatcher
+/bin/systemctl enable awx-channels-worker
+/bin/systemctl enable awx-daphne
+/bin/systemctl enable awx-web
+
+echo "Starting services..."
+/bin/systemctl start awx-cbreceiver
+/bin/systemctl start awx-dispatcher
+/bin/systemctl start awx-channels-worker
+/bin/systemctl start awx-daphne
+/bin/systemctl start awx-web
+
+if [ -f /etc/awx/.enable_auto_migrations ]; then
+   echo "Execute migrations..."
+   sudo -u awx AWX_SETTINGS_FILE=/etc/awx/settings.py awx-manage migrate
+fi
+
+exit 0

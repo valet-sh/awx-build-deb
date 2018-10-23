@@ -1,0 +1,151 @@
+---
+
+- name: ensure awx system user exists
+  user:
+    name: "{{ awx_user }}"
+    comment: "AWX Sytem User"
+    home: "{{ awx_home_path }}"
+    system: yes
+    shell: "/sbin/nologin"
+
+- name: install build dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ build_dependencies }}"
+
+- name: clone git awx project into working directory
+  git:
+    repo: 'https://github.com/ansible/awx.git'
+    dest: "{{ build_working_directory }}"
+
+- name: clone git awx-logos project into working directory
+  git:
+    repo: 'https://github.com/ansible/awx-logos.git'
+    dest: "{{ build_working_directory }}/awx-logos"
+
+- name: list official AWX logo asset files
+  find:
+    path: "{{ build_working_directory }}/awx-logos/awx/ui/client/assets/"
+    recurse: yes
+    file_type: any
+  register: find_result
+
+- name: Copy official AWX logos
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ build_working_directory }}/awx/ui/client/{{ item.path | basename}}"
+    remote_src: yes
+    mode: "{{ item.mode }}"
+  with_items:
+  - "{{ find_result.files }}"
+  when:
+  - item.isdir == False
+
+#- name: Copy official AWX logos
+#  copy:
+#    src: "{{ build_working_directory }}/awx-logos/awx/ui/client/assets/"
+#    dest: "{{ build_working_directory }}/awx/ui/client/"
+#    remote_src: true
+
+- name: install python dependencies stage1
+  pip:
+    requirements: "{{ build_working_directory }}/requirements/requirements.txt"
+
+- name: install python dependencies stage2
+  pip:
+    requirements: "{{ build_working_directory }}/requirements/requirements_git.txt"
+
+- name: install ansible
+  pip:
+    name: ansible
+
+- name: ensure awx config directory exists
+  file:
+    path: "{{ awx_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: ensure awx log directory exists
+  file:
+    path: "{{ awx_log_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: clean awx ui directory
+  file:
+    state: absent
+    path: "{{ awx_ui_path }}"
+
+- name: ensure awx ui directory exists
+  file:
+    path: "{{ awx_ui_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: provide awx settins.py configuration file
+  template:
+    src: "awx/settings.py.j2"
+    dest: "{{ awx_config_dir }}/settings.py"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: provide awx credentials.py configuration dummy file
+  copy:
+    src: "credentials.py.example"
+    dest: "{{ awx_config_dir }}/credentials.py"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: clear distribution
+  make:
+    chdir: "{{ build_working_directory }}"
+    target: clean
+
+- name: run make command
+  make:
+    chdir: "{{ build_working_directory }}"
+    target: sdist
+
+- name: read awx version number
+  shell: "cat {{ build_working_directory }}/VERSION"
+  register: awx_version_obj
+
+- name: set aws version variable
+  set_fact:
+    awx_version: "{{ awx_version_obj.stdout }}"
+
+- name: install awx pip package
+  pip:
+    name: "file://{{ build_working_directory }}/dist/awx-{{ awx_version }}.tar.gz"
+
+- name: collect django static files
+  shell: "awx-manage collectstatic --noinput --clear"
+  environment:
+    AWX_SETTINGS_FILE: "{{ awx_settings_file }}"
+
+- name: list official AWX logo asset files
+  find:
+    path: "{{ build_working_directory }}/awx-logos/awx/ui/client/assets/"
+    recurse: yes
+    file_type: any
+  register: find_result
+
+- name: Copy official AWX logos
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ awx_ui_path }}/static/assets/{{ item.path | basename }}"
+    remote_src: yes
+    mode: "{{ item.mode }}"
+  with_items:
+  - "{{ find_result.files }}"
+  when:
+  - item.isdir == False

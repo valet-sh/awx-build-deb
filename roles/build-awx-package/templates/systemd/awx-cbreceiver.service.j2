@@ -1,0 +1,15 @@
+[Unit]
+Description=AWX cbreceiver service
+After=syslog.target network.target
+
+[Service]
+User={{ awx_user }}
+Group={{ awx_group }}
+Environment=AWX_SETTINGS_FILE={{ awx_settings_file }}
+ExecStart=/usr/local/bin/awx-manage run_callback_receiver
+KillMode=process
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

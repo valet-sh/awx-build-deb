@@ -1,0 +1,6 @@
+---
+
+distribution_release: "stretch"
+
+nodejs_version: "6.x"
+nodejs_preference_file: "/etc/apt/preferences.d/nodejs"

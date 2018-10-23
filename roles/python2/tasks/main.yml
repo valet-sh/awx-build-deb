@@ -1,0 +1,5 @@
+---
+
+- name: Install python2
+  raw: test -e /usr/bin/python && echo -n "ok" || (apt -y update && apt install -y python-minimal)
+  register: python_result

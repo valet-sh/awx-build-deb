@@ -1,0 +1,23 @@
+---
+
+- hosts: localhost
+  gather_facts: true
+  vars:
+    instance_name: awx-ubuntu-build
+    base_image: "ubuntu/bionic/amd64"
+  roles:
+    - lxd-container
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: false
+  roles:
+    - python2
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: true
+  vars:
+    cloudsmith_api_key: "{{ lookup('env','CLOUDSMITH_API_KEY') }}"
+    repository: "valet-sh/ubuntu-testing"
+    os_identifier: "ubuntu/bionic"
+  roles:
+    - build-awx-package

@@ -1,0 +1,9 @@
+---
+
+- include_tasks: cleanup.yml
+
+- include_tasks: debian.yml
+
+- include_tasks: awx.yml
+
+- include_tasks: create-package.yml

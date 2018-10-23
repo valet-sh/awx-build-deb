@@ -1,0 +1,126 @@
+---
+
+- name: ensure awx config directory exists
+  file:
+    path: "{{ build_package_dir }}{{ awx_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: provide awx settings.py file
+  template:
+    src: "awx/settings.py.j2"
+    dest: "{{ build_package_dir }}{{ awx_config_dir }}/settings.py"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: provide awx credentials.py.example file
+  copy:
+    src: "credentials.py.example"
+    dest: "{{ build_package_dir }}{{ awx_config_dir }}/credentials.py.example"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: ensure systemd config directories are present
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "{{ build_package_dir }}/lib/systemd/system"
+
+- name: provide systemd service scripts
+  template:
+    src: "systemd/{{ item }}.j2"
+    dest: "{{ build_package_dir }}/lib/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - "awx-cbreceiver.service"
+    - "awx-dispatcher.service"
+    - "awx-channels-worker.service"
+    - "awx-daphne.service"
+    - "awx-web.service"
+
+- name: ensure awx home directory exists
+  file:
+    path: "{{ build_package_dir }}{{ awx_home_path }}"
+    state: directory
+    owner: "{{ awx_user }}"
+    group: "{{ awx_group }}"
+    mode: '0755'
+
+- name: ensure static folder exists in package build
+  file:
+    path: "{{ build_package_dir }}{{ awx_ui_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: copy static files to package build folder
+  synchronize:
+    src: "{{ awx_ui_path }}/"
+    dest: "{{ build_package_dir }}{{ awx_ui_path }}"
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: ensure tmp folder exists in package build
+  file:
+    path: "{{ build_package_dir }}/tmp"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: copy awx python package to package build folder
+  copy:
+    src: "{{ build_working_directory }}/dist/awx-{{ awx_version }}.tar.gz"
+    dest: "{{ build_package_dir }}/tmp/awx-{{ awx_version }}.tar.gz"
+    remote_src: yes
+
+- name: Clean pip requirements assemble folder
+  file:
+    state: absent
+    path: "/tmp/pip_requirements"
+
+- name: ensure pip requirements assemble folder folder exists
+  file:
+    path: "/tmp/pip_requirements"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: copy pip requirements files
+  copy:
+    src: "{{ build_working_directory }}/requirements/{{ item }}"
+    dest: "/tmp/pip_requirements/{{ item }}"
+    remote_src: yes
+  with_items:
+    - "requirements.txt"
+    - "requirements_git.txt"
+
+- name: assemeble all pip requirement files
+  assemble:
+    src: "/tmp/pip_requirements/"
+    dest: "{{ build_package_dir }}/tmp/pip_requirements.txt"
+
+- name: ensure .awx_version file is deleted
+  file:
+    path: "{{ build_package_dir }}{{ awx_home_path }}/.tower_version"
+    state: absent
+
+- name: ensure awx version is set in .awx_version file
+  lineinfile:
+    path: "{{ build_package_dir }}{{ awx_home_path }}/.tower_version"
+    state: present
+    line: "{{ awx_version }}"
+    owner: "{{ awx_user }}"
+    group: "{{ awx_group }}"
+    create: yes

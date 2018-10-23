@@ -1,0 +1,22 @@
+---
+
+- hosts: localhost
+  gather_facts: true
+  vars:
+    instance_name: awx-debian-build
+  roles:
+    - lxd-container
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: false
+  roles:
+    - python2
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: true
+  vars:
+    cloudsmith_api_key: "{{ lookup('env','CLOUDSMITH_API_KEY') }}"
+    repository: "valet-sh/debian-testing"
+    os_identifier: "debian/stretch"
+  roles:
+    - build-awx-package

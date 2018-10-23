@@ -1,0 +1,4 @@
+---
+
+- name: create .deb package
+  shell: "dpkg-deb -b {{ build_package_dir }} {{ deb_package_name }}"
