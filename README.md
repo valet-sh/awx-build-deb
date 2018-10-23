@@ -39,11 +39,13 @@ The package will be automatically stored on your build machine in the `/tmp` dir
 
 ### Use pre-built packages
 
+The Debian repository is provided by [cloudsmith](https://cloudsmith.io). Thanks for the great service! 
+
 currently we are only providing a "testing" repository. After some feedback and more time to test we will add a "stable" repository.
 
 import the gpg key into your system
 ```
-wget -O - 'https://dl.cloudsmith.io/public/valet-sh/debian-testing/cfg/gpg/gpg.789928BCCB5D7C3D.key' | sudo apt-key add -
+wget -O - 'https://dl.cloudsmith.io/public/valet-sh/debian-testing/cfg/gpg/gpg.B63B658377885BFD.key' | sudo apt-key add -
 ```
 
 add the repository 
