@@ -14,10 +14,11 @@
     state: present
   with_items: "{{ build_dependencies }}"
 
-- name: clone git awx project into working directory
+- name: "checkout awx {{ awx_target_version }} into working directory"
   git:
     repo: 'https://github.com/ansible/awx.git'
     dest: "{{ build_working_directory }}"
+    version: "{{ awx_target_version }}"
 
 - name: clone git awx-logos project into working directory
   git:
@@ -41,12 +42,6 @@
   - "{{ find_result.files }}"
   when:
   - item.isdir == False
-
-#- name: Copy official AWX logos
-#  copy:
-#    src: "{{ build_working_directory }}/awx-logos/awx/ui/client/assets/"
-#    dest: "{{ build_working_directory }}/awx/ui/client/"
-#    remote_src: true
 
 - name: install python dependencies stage1
   pip:
