@@ -45,14 +45,17 @@
 
 - name: install python dependencies stage1
   pip:
+    executable: pip3
     requirements: "{{ build_working_directory }}/requirements/requirements.txt"
 
 - name: install python dependencies stage2
   pip:
+    executable: pip3
     requirements: "{{ build_working_directory }}/requirements/requirements_git.txt"
 
 - name: install ansible
   pip:
+    executable: pip3
     name: ansible
 
 - name: ensure awx config directory exists
@@ -120,6 +123,7 @@
 
 - name: install awx pip package
   pip:
+    executable: pip3
     name: "file://{{ build_working_directory }}/dist/awx-{{ awx_version }}.tar.gz"
 
 - name: collect django static files

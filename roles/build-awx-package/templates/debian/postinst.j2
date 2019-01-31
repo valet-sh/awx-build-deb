@@ -16,13 +16,13 @@ if [ ! -d {{ awx_log_path }} ]; then
 fi
 
 echo "Installing python requirements..."
-pip install -r /tmp/pip_requirements.txt
+pip3 install -r /tmp/pip_requirements.txt
 
 echo "Installing ansible..."
-pip install ansible
+pip3 install ansible
 
 echo "Installing awx..."
-pip install --upgrade /tmp/awx-{{ awx_version }}.tar.gz
+pip3 install --upgrade /tmp/awx-{{ awx_version }}.tar.gz
 
 /bin/systemctl daemon-reload
 

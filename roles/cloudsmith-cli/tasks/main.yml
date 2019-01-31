@@ -2,6 +2,7 @@
 
 - name: "ensure cloudsmith-cli python package is installed"
   pip:
+    executable: pip3
     name: cloudsmith-cli
 
 - name: "push package {{ package_filename }} to {{ repository }} for {{ os_identifier }}"

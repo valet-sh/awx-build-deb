@@ -8,7 +8,7 @@ from credentials import *
 
 def get_secret():
     if os.path.exists("{{ awx_secret_key_file }}"):
-        return file('{{ awx_secret_key_file }}', 'rb').read().strip()
+        return open('{{ awx_secret_key_file }}', 'rb').read().strip()
     return os.getenv("SECRET_KEY", "{{ awx_fallback_secret_key }}")
 
 HOSTNAME = platform.node()
