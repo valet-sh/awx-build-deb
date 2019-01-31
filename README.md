@@ -12,7 +12,7 @@ This project aims to provide native Debian/Ubuntu packages for [Ansible AWX](htt
 
 ## Installation
 
-There are to ways of getting a native AWX package. You can build the package by yourself or you can use our prebuild packages which are available on a cloudsmith debian/ubuntu repository 
+There are two ways of getting a native AWX package. You can build the package by yourself or you can use our prebuild packages which are available on a cloudsmith debian/ubuntu repository 
 
 
 ### Build packages by yourself
