@@ -2,7 +2,7 @@
 
 ## Configuration
 
-This guide covers the installation of all required as well as the configuration of AWX itself. You can skip the next section `Install Requirements` if you have already installed all required services.
+This guide covers the installation of all required services as well as the configuration of AWX itself. You can skip the next section `Install Requirements` if you have already installed all required services.
 
 ### Install Requirements
 
