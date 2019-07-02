@@ -22,6 +22,7 @@ build_dependencies:
   - python3-pip
   - gettext
   - rsync
+  - python3-docutils
 
 awx_user: "awx"
 awx_group: "awx"
