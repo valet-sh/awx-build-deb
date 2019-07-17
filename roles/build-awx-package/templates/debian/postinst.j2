@@ -24,6 +24,14 @@ pip3 install ansible
 echo "Installing awx..."
 pip3 install --upgrade /tmp/awx-{{ awx_version }}.tar.gz
 
+
+mkdir -p {{ awx_venv }}
+cd {{ awx_venv }}
+python3 -m venv {{ awx_venv_awx_prefix }}
+cd {{ awx_venv_awx_prefix }}
+bin/pip3 install ansible python-memcached psutil requests
+
+
 /bin/systemctl daemon-reload
 
 echo "Enabling services..."

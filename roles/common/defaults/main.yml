@@ -1,0 +1,8 @@
+---
+
+common_packages:
+  - sudo
+  - git
+  - curl
+  - ca-certificates
+  - openssl

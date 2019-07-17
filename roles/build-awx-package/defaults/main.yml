@@ -19,15 +19,21 @@ build_dependencies:
   - libxml2
   - libxmlsec1-dev
   - swig
-  - python3-pip
   - gettext
   - rsync
   - python3-docutils
+  - pkg-config
+  - libpq-dev
+  - ca-certificates
+  - openssl
 
 awx_user: "awx"
 awx_group: "awx"
 awx_home_path: "/var/lib/awx"
 awx_log_path: "/var/log/awx"
+awx_venv: "/var/lib/awx-venv"
+awx_venv_awx_prefix: "awx"
+awx_venv_ansible: "{{ awx_venv }}/{{ awx_venv_awx_prefix }}"
 
 awx_config_dir: "/etc/awx"
 awx_settings_file: "{{ awx_config_dir }}/settings.py"

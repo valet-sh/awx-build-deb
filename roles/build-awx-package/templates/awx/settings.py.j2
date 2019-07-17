@@ -29,10 +29,11 @@ INTERNAL_API_URL = 'http://127.0.0.1:8052'
 
 AWX_TASK_ENV['HOME'] = '{{ awx_home_path }}'
 
-# Container environments don't like chroots
+CUSTOM_VENV_PATHS = ['{{ awx_venv }}/']
+
 AWX_PROOT_ENABLED = False
 
-ANSIBLE_VENV_PATH = '/usr/local/'
+ANSIBLE_VENV_PATH = '{{ awx_venv_ansible }}/'
 
 CLUSTER_HOST_ID = HOSTNAME
 SYSTEM_UUID = '00000000-0000-0000-0000-000000000000'
