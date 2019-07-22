@@ -51,7 +51,7 @@ wget -O - 'https://dl.cloudsmith.io/public/valet-sh/debian-testing/cfg/gpg/gpg.B
 
 add the repository 
 ```
-echo "deb https://dl.cloudsmith.io/public/valet-sh/debian-testing/deb/debian stretch main" | sudo tee /etc/apt/sources.list.d/valet-sh-debian-testing.list
+echo "deb https://dl.cloudsmith.io/public/valet-sh/debian-testing/deb/debian buster main" | sudo tee /etc/apt/sources.list.d/valet-sh-debian-testing.list
 ```
 
 Update your apt cache and install AWX

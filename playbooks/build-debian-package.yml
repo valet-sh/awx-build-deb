@@ -1,0 +1,28 @@
+---
+
+- hosts: localhost
+  gather_facts: true
+  vars:
+    instance_name: awx-debian-build
+  roles:
+    - lxd-container
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: false
+  roles:
+    - python2
+
+- hosts: "{{ hostvars.localhost.container_name }}"
+  gather_facts: true
+  vars:
+    upload_to_cloudsmith: false
+  roles:
+    - build-awx-package
+
+- hosts: localhost
+  gather_facts: true
+  vars:
+    instance_name: awx-debian-build
+    action: terminate
+  roles:
+    - lxd-container
