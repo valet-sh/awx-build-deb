@@ -5,7 +5,7 @@ After=syslog.target network.target
 [Service]
 Environment=AWX_SETTINGS_FILE={{ awx_settings_file }}
 
-ExecStart=/usr/local/bin/uwsgi \
+ExecStart={{ awx_venv_awx }}/bin/uwsgi \
         --socket 127.0.0.1:8050 \
         --module=awx.wsgi:application \
         --logto=/var/log/awx/web.log \

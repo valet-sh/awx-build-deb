@@ -70,46 +70,11 @@
     dest: "{{ build_package_dir }}{{ awx_ui_path }}"
   delegate_to: "{{ inventory_hostname }}"
 
-- name: ensure tmp folder exists in package build
-  file:
-    path: "{{ build_package_dir }}/tmp"
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: copy awx python package to package build folder
-  copy:
-    src: "{{ build_working_directory }}/dist/awx-{{ awx_version }}.tar.gz"
-    dest: "{{ build_package_dir }}/tmp/awx-{{ awx_version }}.tar.gz"
-    remote_src: yes
-
-- name: Clean pip requirements assemble folder
-  file:
-    state: absent
-    path: "/tmp/pip_requirements"
-
-- name: ensure pip requirements assemble folder folder exists
-  file:
-    path: "/tmp/pip_requirements"
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: copy pip requirements files
-  copy:
-    src: "{{ build_working_directory }}/requirements/{{ item }}"
-    dest: "/tmp/pip_requirements/{{ item }}"
-    remote_src: yes
-  with_items:
-    - "requirements.txt"
-    - "requirements_git.txt"
-
-- name: assemeble all pip requirement files
-  assemble:
-    src: "/tmp/pip_requirements/"
-    dest: "{{ build_package_dir }}/tmp/pip_requirements.txt"
+- name: copy venv directory to package build folder
+  synchronize:
+    src: "{{ awx_venv_base }}/"
+    dest: "{{ build_package_dir }}{{ awx_venv_base }}"
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: ensure .awx_version file is deleted
   file:
@@ -124,3 +89,16 @@
     owner: "{{ awx_user }}"
     group: "{{ awx_group }}"
     create: yes
+
+- name: "copy awx-python bash script into awx venv"
+  copy:
+    src: "/usr/bin/awx-python"
+    dest: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-python"
+    mode: '0755'
+    remote_src: yes
+
+- name: "change interpreter for awx-manage to awx-python in venv"
+  lineinfile:
+    path: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-manage"
+    regexp: '#!/usr/bin/awx-python'
+    line: '#!/var/lib/awx/venv/awx/bin/awx-python'

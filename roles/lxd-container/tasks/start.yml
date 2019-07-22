@@ -1,0 +1,20 @@
+---
+
+- name: "ensure insstance {{ container_name }} is created and running"
+  lxd_container:
+    name: "{{ container_name }}"
+    state: started
+    source:
+      type: image
+      mode: pull
+      server: https://images.linuxcontainers.org
+      protocol: simplestreams
+      alias: "{{ base_image }}"
+    url: "unix:{{ lxd_unix_socket }}"
+    wait_for_ipv4_addresses: true
+    timeout: 600
+
+- name: add container to inventory
+  add_host:
+    hostname: "{{ container_name }}"
+    ansible_connection: lxd

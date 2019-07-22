@@ -43,20 +43,32 @@
   when:
   - item.isdir == False
 
+- name: ensure python3 awx venv directory exists
+  file:
+    path: "{{ awx_venv_base }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: ensure python3 virtual environment for awx is created
+  shell: "python3 -m venv {{ awx_venv_awx_prefix }}"
+  args:
+    chdir: "{{ awx_venv_base }}/"
+
+- name: set virtualenv awx pip3 path
+  set_fact:
+    awx_pip3_bin: "{{ awx_venv_awx }}/bin/pip3"
+
 - name: install python dependencies stage1
   pip:
-    executable: pip3
+    executable: "{{ awx_pip3_bin }}"
     requirements: "{{ build_working_directory }}/requirements/requirements.txt"
 
 - name: install python dependencies stage2
   pip:
-    executable: pip3
+    executable: "{{ awx_pip3_bin }}"
     requirements: "{{ build_working_directory }}/requirements/requirements_git.txt"
-
-- name: install ansible
-  pip:
-    executable: pip3
-    name: ansible
 
 - name: ensure awx config directory exists
   file:
@@ -112,6 +124,8 @@
   make:
     chdir: "{{ build_working_directory }}"
     target: sdist
+    params:
+      PYTHON: "{{ awx_venv_awx }}/bin/python3"
 
 - name: read awx version number
   shell: "cat {{ build_working_directory }}/VERSION"
@@ -123,11 +137,11 @@
 
 - name: install awx pip package
   pip:
-    executable: pip3
+    executable: "{{ awx_pip3_bin }}"
     name: "file://{{ build_working_directory }}/dist/awx-{{ awx_version }}.tar.gz"
 
 - name: collect django static files
-  shell: "awx-manage collectstatic --noinput --clear"
+  shell: "{{ awx_venv_awx }}/bin/awx-manage collectstatic --noinput --clear"
   environment:
     AWX_SETTINGS_FILE: "{{ awx_settings_file }}"
 
@@ -148,3 +162,22 @@
   - "{{ find_result.files }}"
   when:
   - item.isdir == False
+
+- name: ensure python3 virtual environment for ansible is created
+  shell: "python3 -m venv {{ awx_venv_ansible_prefix }}"
+  args:
+    chdir: "{{ awx_venv_base }}/"
+
+- name: set virtualenv awx pip3 path
+  set_fact:
+    ansible_pip3_bin: "{{ awx_venv_ansible }}/bin/pip3"
+
+- name: install ansible and dependencies
+  pip:
+    executable: "{{ ansible_pip3_bin }}"
+    name:
+      - wheel
+      - python-memcached
+      - psutil
+      - requests
+      - ansible

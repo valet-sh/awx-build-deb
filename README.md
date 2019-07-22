@@ -9,6 +9,7 @@ WARNING: This project is in its early development stage. Do not use these packag
 
 This project aims to provide native Debian/Ubuntu packages for [Ansible AWX](https://github.com/ansible/awx) 
 
+A the moment only Debian 10 (Buster) is supported.
 
 ## Installation
 

@@ -1,5 +1,10 @@
 ---
 
+- name: "ensure python3-pip is installed"
+  apt:
+    name: "python3-pip"
+    state: present
+
 - name: "ensure cloudsmith-cli python package is installed"
   pip:
     executable: pip3

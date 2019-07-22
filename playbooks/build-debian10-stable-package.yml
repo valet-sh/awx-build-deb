@@ -3,8 +3,8 @@
 - hosts: localhost
   gather_facts: true
   vars:
-    instance_name: awx-ubuntu-build
-    base_image: "ubuntu/bionic/amd64"
+    instance_name: awx-debian-build
+    base_image: "debian/buster/amd64"
   roles:
     - lxd-container
 
@@ -17,7 +17,15 @@
   gather_facts: true
   vars:
     cloudsmith_api_key: "{{ lookup('env','CLOUDSMITH_API_KEY') }}"
-    repository: "valet-sh/ubuntu-testing"
-    os_identifier: "ubuntu/bionic"
+    repository: "valet-sh/debian-stable"
+    os_identifier: "debian/buster"
   roles:
     - build-awx-package
+
+- hosts: localhost
+  gather_facts: true
+  vars:
+    instance_name: awx-debian-build
+    action: terminate
+  roles:
+    - lxd-container

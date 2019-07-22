@@ -11,21 +11,10 @@
   set_fact:
     container_name: "{{ instance_name }}"
 
-- name: "ensure container for {{ container_name }} is created and running"
-  lxd_container:
-    name: "{{ container_name }}"
-    state: started
-    source:
-      type: image
-      mode: pull
-      server: https://images.linuxcontainers.org
-      protocol: simplestreams
-      alias: "{{ base_image }}"
-    url: "unix:{{ lxd_unix_socket }}"
-    wait_for_ipv4_addresses: true
-    timeout: 600
+- name: include start tasks
+  include_tasks: start.yml
+  when: action == "start"
 
-- name: add container to inventory
-  add_host:
-    hostname: "{{ container_name }}"
-    ansible_connection: lxd
+- name: include terminate tasks
+  include_tasks: terminate.yml
+  when: action == "terminate"

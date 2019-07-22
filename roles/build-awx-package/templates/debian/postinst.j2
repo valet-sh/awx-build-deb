@@ -15,21 +15,8 @@ if [ ! -d {{ awx_log_path }} ]; then
     chown -R {{ awx_user }}:{{ awx_group }} {{ awx_log_path }}
 fi
 
-echo "Installing python requirements..."
-pip3 install -r /tmp/pip_requirements.txt
-
-echo "Installing ansible..."
-pip3 install ansible
-
-echo "Installing awx..."
-pip3 install --upgrade /tmp/awx-{{ awx_version }}.tar.gz
-
-
-mkdir -p {{ awx_venv }}
-cd {{ awx_venv }}
-python3 -m venv {{ awx_venv_awx_prefix }}
-cd {{ awx_venv_awx_prefix }}
-bin/pip3 install ansible python-memcached psutil requests
+echo "creating symlink for awx-manage..."
+ln -sfn {{ awx_venv_awx }}/bin/awx-manage /usr/local/bin/awx-manage
 
 
 /bin/systemctl daemon-reload
@@ -50,7 +37,7 @@ echo "Starting services..."
 
 if [ -f /etc/awx/.enable_auto_migrations ]; then
    echo "Execute migrations..."
-   sudo -u awx AWX_SETTINGS_FILE=/etc/awx/settings.py awx-manage migrate
+   sudo -u awx AWX_SETTINGS_FILE=/etc/awx/settings.py {{ awx_venv_awx }}/bin/awx-manage migrate
 fi
 
 exit 0

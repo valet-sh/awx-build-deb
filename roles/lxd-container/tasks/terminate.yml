@@ -1,0 +1,14 @@
+---
+
+- name: "stop instance {{ container_name }}"
+  lxd_container:
+    name: "{{ container_name }}"
+    url: "unix:{{ lxd_unix_socket }}"
+    force_stop: true
+    state: stopped
+
+- name: "delete instance {{ container_name }}"
+  lxd_container:
+    name: "{{ container_name }}"
+    url: "unix:{{ lxd_unix_socket }}"
+    state: absent

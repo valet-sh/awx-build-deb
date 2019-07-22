@@ -26,14 +26,20 @@ build_dependencies:
   - libpq-dev
   - ca-certificates
   - openssl
+  - python3-venv
+  - build-essential
 
 awx_user: "awx"
 awx_group: "awx"
 awx_home_path: "/var/lib/awx"
 awx_log_path: "/var/log/awx"
-awx_venv: "/var/lib/awx-venv"
+awx_venv_base: "/var/lib/awx/venv"
 awx_venv_awx_prefix: "awx"
-awx_venv_ansible: "{{ awx_venv }}/{{ awx_venv_awx_prefix }}"
+awx_venv_ansible_prefix: "ansible"
+awx_venv_awx: "{{ awx_venv_base }}/{{ awx_venv_awx_prefix }}"
+awx_venv_ansible: "{{ awx_venv_base }}/{{ awx_venv_ansible_prefix }}"
+
+
 
 awx_config_dir: "/etc/awx"
 awx_settings_file: "{{ awx_config_dir }}/settings.py"
