@@ -10,9 +10,8 @@
 
 - name: install build dependencies
   apt:
-    name: "{{ item }}"
+    name: "{{ build_dependencies }}"
     state: present
-  with_items: "{{ build_dependencies }}"
 
 - name: "checkout awx {{ awx_target_version }} into working directory"
   git:
@@ -59,6 +58,12 @@
 - name: set virtualenv awx pip3 path
   set_fact:
     awx_pip3_bin: "{{ awx_venv_awx }}/bin/pip3"
+
+- name: install python dependencies stage1
+  pip:
+    name: wheel
+    state: present
+    executable: "{{ awx_pip3_bin }}"
 
 - name: install python dependencies stage1
   pip:

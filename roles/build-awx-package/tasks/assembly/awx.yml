@@ -90,15 +90,15 @@
     group: "{{ awx_group }}"
     create: yes
 
-- name: "copy awx-python bash script into awx venv"
-  copy:
-    src: "/usr/bin/awx-python"
-    dest: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-python"
-    mode: '0755'
-    remote_src: yes
+#- name: "copy awx-python bash script into awx venv"
+#  copy:
+#    src: "/usr/bin/awx-python"
+#    dest: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-python"
+#    mode: '0755'
+#    remote_src: yes
 
-- name: "change interpreter for awx-manage to awx-python in venv"
-  lineinfile:
-    path: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-manage"
-    regexp: '#!/usr/bin/awx-python'
-    line: '#!/var/lib/awx/venv/awx/bin/awx-python'
+#- name: "change interpreter for awx-manage to awx-python in venv"
+#  lineinfile:
+#    path: "{{ build_package_dir }}{{ awx_venv_awx }}/bin/awx-manage"
+#    regexp: '#!/usr/bin/awx-python'
+#    line: '#!/var/lib/awx/venv/awx/bin/awx-python'
