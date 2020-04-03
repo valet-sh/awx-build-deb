@@ -47,6 +47,7 @@
     - "awx-channels-worker.service"
     - "awx-daphne.service"
     - "awx-web.service"
+    - "awx-wsbroadcast.service"
 
 - name: ensure awx home directory exists
   file:

@@ -104,30 +104,16 @@ DATABASES = {
     }
 }
 
-#
-####CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/%2F'
-#
-
-BROKER_URL = 'amqp://{}:{}@{}:{}/{}'.format(
-    os.getenv("RABBITMQ_USER", None),
-    os.getenv("RABBITMQ_PASSWORD", None),
-    os.getenv("RABBITMQ_HOST", None),
-    os.getenv("RABBITMQ_PORT", None),
-    os.getenv("RABBITMQ_VHOST", None))
+BROKER_URL = "redis://127.0.0.1:6379"
 
 CHANNEL_LAYERS = {
-    'default': {'BACKEND': 'asgi_amqp.AMQPChannelLayer',
-                'ROUTING': 'awx.main.routing.channel_routing',
-                'CONFIG': {'url': BROKER_URL}}
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+            "capacity": 10000,
+        },
+    },
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{}:{}'.format(os.getenv("MEMCACHED_HOST", None),
-                                   os.getenv("MEMCACHED_PORT", None))
-    },
-    'ephemeral': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
-}
+USE_X_FORWARDED_PORT = True

@@ -1,12 +1,12 @@
 [Unit]
-Description=AWX daphne service
+Description=AWX wsbroadcast
 After=syslog.target network.target
 
 [Service]
 User={{ awx_user }}
 Group={{ awx_group }}
 Environment=AWX_SETTINGS_FILE={{ awx_settings_file }}
-ExecStart={{ awx_venv_awx }}/bin/daphne -b 127.0.0.1 -p 8051 --websocket_timeout -1 awx.asgi:channel_layer
+ExecStart={{ awx_venv_awx }}/bin/awx-manage run_wsbroadcast
 KillMode=process
 Restart=on-failure
 RestartSec=2s
