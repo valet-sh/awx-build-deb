@@ -72,6 +72,7 @@ LOGGING['handlers']['task_system']['filename'] = '{{ awx_log_path }}/task_system
 LOGGING['handlers']['management_playbooks']['filename'] = '{{ awx_log_path }}/management_playbooks.log'
 LOGGING['handlers']['system_tracking_migrations']['filename'] = '{{ awx_log_path }}/tower_system_tracking_migrations.log'
 LOGGING['handlers']['rbac_migrations']['filename'] = '{{ awx_log_path }}/tower_rbac_migrations.log'
+LOGGING['handlers']['wsbroadcast']['filename'] = '{{ awx_log_path }}/wsbroadcast.log'
 
 LOGGING['loggers']['django.request']['handlers'] = ['console']
 LOGGING['loggers']['rest_framework.request']['handlers'] = ['console']
