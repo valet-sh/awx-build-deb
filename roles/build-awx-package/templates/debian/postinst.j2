@@ -24,14 +24,12 @@ ln -sfn {{ awx_venv_awx }}/bin/awx-manage /usr/local/bin/awx-manage
 echo "Enabling services..."
 /bin/systemctl enable awx-cbreceiver
 /bin/systemctl enable awx-dispatcher
-/bin/systemctl enable awx-channels-worker
 /bin/systemctl enable awx-daphne
 /bin/systemctl enable awx-web
 
 echo "Starting services..."
 /bin/systemctl start awx-cbreceiver
 /bin/systemctl start awx-dispatcher
-/bin/systemctl start awx-channels-worker
 /bin/systemctl start awx-daphne
 /bin/systemctl start awx-web
 

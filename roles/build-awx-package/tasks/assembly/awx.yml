@@ -44,7 +44,6 @@
   with_items:
     - "awx-cbreceiver.service"
     - "awx-dispatcher.service"
-    - "awx-channels-worker.service"
     - "awx-daphne.service"
     - "awx-web.service"
     - "awx-wsbroadcast.service"
