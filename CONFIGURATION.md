@@ -9,15 +9,15 @@ This guide covers the installation of all required services as well as the confi
 install all required services
 
 ```bash 
-sudo apt install memcached rabbitmq-server postgresql postgresql-contrib
+sudo apt install memcached redis-server postgresql postgresql-contrib
 ```
 
 
 put all services in autostart and ensure they are running
 
 ```bash
-sudo systemctl enable rabbitmq-server
-sudo systemctl start rabbitmq-server
+sudo systemctl enable redis-server
+sudo systemctl start redis-server
 
 sudo systemctl enable postgresql
 sudo systemctl start postgresql
@@ -68,3 +68,5 @@ If you want to run the migrations automatically create a file called `.enable_au
 ```bash 
 touch /etc/awx/.enable_auto_migrations
 ```
+
+Use the `example-nginx.conf` example configuration file to setup nginx.
