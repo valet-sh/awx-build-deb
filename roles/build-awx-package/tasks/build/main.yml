@@ -73,6 +73,11 @@
 - name: install python dependencies stage2
   pip:
     executable: "{{ awx_pip3_bin }}"
+    requirements: "{{ build_working_directory }}/requirements/requirements_ansible.txt"
+
+- name: install python dependencies stage3
+  pip:
+    executable: "{{ awx_pip3_bin }}"
     requirements: "{{ build_working_directory }}/requirements/requirements_git.txt"
 
 - name: ensure awx config directory exists

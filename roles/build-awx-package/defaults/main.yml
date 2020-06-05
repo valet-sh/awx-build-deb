@@ -29,6 +29,9 @@ build_dependencies:
   - python3-venv
   - python-setuptools
   - build-essential
+  - libcurl4-openssl-dev
+  - libssl-dev
+  - libkrb5-dev
 
 awx_user: "awx"
 awx_group: "awx"
