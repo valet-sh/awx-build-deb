@@ -13,7 +13,11 @@ if [ ! -d {{ awx_log_path }} ]; then
     echo "creating log directory"
     mkdir -p {{ awx_log_path }}
     chown -R {{ awx_user }}:{{ awx_group }} {{ awx_log_path }}
+
 fi
+
+# the log path is sometimes hardcoded to /var/log/tower. We create a symlink to awx log path
+ln -sfn {{ awx_log_path }} /var/log/tower
 
 echo "creating symlink for awx-manage..."
 ln -sfn {{ awx_venv_awx }}/bin/awx-manage /usr/local/bin/awx-manage
