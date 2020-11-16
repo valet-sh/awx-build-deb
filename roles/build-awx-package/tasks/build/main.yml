@@ -88,6 +88,13 @@
     group: root
     mode: '0755'
 
+- name: ensure tower config directory exists
+  file:
+    src: "{{ awx_config_dir }}"
+    dest: "{{ tower_config_dir }}"
+    state: link
+  when: awx_target_version is version('11.0.0','>=')
+
 - name: ensure awx log directory exists
   file:
     path: "{{ awx_log_path }}"
@@ -95,6 +102,13 @@
     owner: root
     group: root
     mode: '0755'
+
+- name: ensure tower log directory exists
+  file:
+    src: "{{ awx_log_path }}"
+    dest: "{{ tower_log_path }}"
+    state: link
+  when: awx_target_version is version('11.0.0','>=')
 
 - name: clean awx ui directory
   file:
